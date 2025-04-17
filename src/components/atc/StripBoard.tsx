@@ -1,8 +1,9 @@
 
 import React from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
-import { FlightData, FlightStatus, FlightStrip } from './FlightStrip';
+import { FlightStrip } from './FlightStrip';
 import { cn } from '@/lib/utils';
+import { FlightData, FlightStatus } from './types';
 
 interface StripBoardProps {
   title: string;

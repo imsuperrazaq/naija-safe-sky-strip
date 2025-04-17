@@ -1,40 +1,11 @@
 
 import React, { useState } from 'react';
-import { Clock, ArrowDown, ArrowUp, Plane, MoreVertical, GripHorizontal } from 'lucide-react';
+import { Plane } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-
-export type FlightStatus = 'pending' | 'active' | 'cleared' | 'alert';
-export type FlightType = 'arrival' | 'departure' | 'overflight';
-
-export interface FlightData {
-  id: string;
-  callsign: string;
-  aircraft: string;
-  route: {
-    departure: string;
-    destination: string;
-  };
-  level: {
-    current: string;
-    cleared: string;
-    requested?: string;
-  };
-  estimatedTime: string; // HH:MM format
-  speed: string;
-  status: FlightStatus;
-  type: FlightType;
-  squawk?: string;
-  remarks?: string;
-  handlingController?: string;
-  lastUpdated?: string;
-}
+import { FlightStripHeader } from './FlightStripHeader';
+import { FlightLevels } from './FlightLevels';
+import { StatusActions } from './StatusActions';
+import { FlightData, FlightStatus } from './types';
 
 interface FlightStripProps {
   flight: FlightData;
@@ -64,9 +35,9 @@ export const FlightStrip = ({
     'overflight': 'border-t-teal-500'
   };
 
-  const handleStatusChange = (status: FlightStatus) => {
+  const handleStatusChange = (id: string, status: FlightStatus) => {
     if (onStatusChange) {
-      onStatusChange(flight.id, status);
+      onStatusChange(id, status);
     }
   };
 
@@ -84,40 +55,12 @@ export const FlightStrip = ({
       onClick={() => setIsSelected(!isSelected)}
     >
       {/* Header row */}
-      <div className="flex justify-between items-center">
-        <div className="font-bold text-base tracking-wide flex items-center gap-2">
-          <GripHorizontal className="h-4 w-4 text-slate-500 hover:text-slate-300" />
-          {flight.callsign}
-        </div>
-        <div className="flex items-center gap-1">
-          <Clock className="h-3 w-3 text-[hsl(var(--atc-pending))]" />
-          <span className="text-xs">{flight.estimatedTime}</span>
-          <div className="flex gap-1 ml-2">
-            <Button 
-              onClick={(e) => {
-                e.stopPropagation();
-                onSectorChange && onSectorChange(flight.id, 'up');
-              }}
-              size="icon" 
-              variant="ghost" 
-              className="h-6 w-6 p-0 hover:bg-slate-700"
-            >
-              <ArrowUp className="h-4 w-4" />
-            </Button>
-            <Button 
-              onClick={(e) => {
-                e.stopPropagation();
-                onSectorChange && onSectorChange(flight.id, 'down');
-              }}
-              size="icon" 
-              variant="ghost" 
-              className="h-6 w-6 p-0 hover:bg-slate-700"
-            >
-              <ArrowDown className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      </div>
+      <FlightStripHeader 
+        callsign={flight.callsign}
+        estimatedTime={flight.estimatedTime}
+        id={flight.id}
+        onSectorChange={onSectorChange}
+      />
 
       {/* Aircraft info */}
       <div className="flex justify-between">
@@ -140,29 +83,14 @@ export const FlightStrip = ({
       </div>
 
       {/* Flight levels */}
-      <div className="flex justify-between">
-        <div className="flex gap-2 text-xs">
-          <div>
-            <span className="text-slate-400">CFL:</span>
-            <span className="ml-1 text-white font-bold">{flight.level.cleared}</span>
-          </div>
-          <div>
-            <span className="text-slate-400">AFL:</span>
-            <span className="ml-1">{flight.level.current}</span>
-          </div>
-          {flight.level.requested && (
-            <div>
-              <span className="text-slate-400">RFL:</span>
-              <span className="ml-1 text-amber-400">{flight.level.requested}</span>
-            </div>
-          )}
-        </div>
-        <div>
-          <span className="text-xs">{flight.speed}</span>
-        </div>
-      </div>
+      <FlightLevels 
+        current={flight.level.current}
+        cleared={flight.level.cleared}
+        requested={flight.level.requested}
+        speed={flight.speed}
+      />
 
-      {/* Controller info - NEW */}
+      {/* Controller info */}
       {flight.handlingController && (
         <div className="flex justify-between text-xs mt-1">
           <div className="text-slate-400">Controller:</div>
@@ -174,78 +102,12 @@ export const FlightStrip = ({
       )}
 
       {/* Status Actions */}
-      <div className="flex justify-between items-center mt-1">
-        <div className="flex gap-1">
-          <Button
-            size="sm"
-            variant={flight.status === 'pending' ? "default" : "outline"}
-            className={cn("h-6 px-2 text-xs",
-              flight.status === 'pending' ? "bg-amber-600 hover:bg-amber-700" : "hover:bg-amber-900/30"
-            )}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleStatusChange('pending');
-            }}
-          >
-            PEND
-          </Button>
-          <Button
-            size="sm"
-            variant={flight.status === 'active' ? "default" : "outline"}
-            className={cn("h-6 px-2 text-xs",
-              flight.status === 'active' ? "bg-green-600 hover:bg-green-700" : "hover:bg-green-900/30"
-            )}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleStatusChange('active');
-            }}
-          >
-            ACT
-          </Button>
-          <Button
-            size="sm"
-            variant={flight.status === 'cleared' ? "default" : "outline"}
-            className={cn("h-6 px-2 text-xs",
-              flight.status === 'cleared' ? "bg-blue-600 hover:bg-blue-700" : "hover:bg-blue-900/30"
-            )}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleStatusChange('cleared');
-            }}
-          >
-            CLR
-          </Button>
-        </div>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button 
-              onClick={(e) => e.stopPropagation()}
-              size="icon" 
-              variant="ghost" 
-              className="h-6 w-6 p-0 hover:bg-slate-700"
-            >
-              <MoreVertical className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="bg-slate-900 text-white border-slate-700">
-            <DropdownMenuItem 
-              className="text-red-400 cursor-pointer"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleStatusChange('alert');
-              }}
-            >
-              Mark as Alert
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer">Assign Controller</DropdownMenuItem>
-            {flight.remarks && (
-              <DropdownMenuItem className="cursor-pointer">View Remarks</DropdownMenuItem>
-            )}
-            <DropdownMenuItem className="cursor-pointer">Edit Details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      <StatusActions 
+        status={flight.status}
+        id={flight.id}
+        onStatusChange={handleStatusChange}
+        remarks={flight.remarks}
+      />
       
       {/* Conditional remarks display */}
       {flight.remarks && isSelected && (
@@ -256,3 +118,5 @@ export const FlightStrip = ({
     </div>
   );
 };
+
+export { FlightData, FlightStatus, FlightType } from './types';
