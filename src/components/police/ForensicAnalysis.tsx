@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { 
-  Flask, Share2, Clock, ChevronDown, Upload, FileText, 
+  Beaker, Share2, Clock, ChevronDown, Upload, FileText, 
   MicroscopeIcon, TestTube, Dna, ShieldAlert
 } from 'lucide-react';
 
@@ -278,7 +278,7 @@ const ForensicAnalysis = () => {
           <Card>
             <CardHeader>
               <CardTitle className="text-base flex items-center">
-                <Flask className="mr-2 h-4 w-4" /> Lab Status
+                <Beaker className="mr-2 h-4 w-4" /> Lab Status
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
