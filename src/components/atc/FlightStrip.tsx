@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import { Plane } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { FlightStripHeader } from './FlightStripHeader';
 import { FlightLevels } from './FlightLevels';
 import { StatusActions } from './StatusActions';
-import { FlightData, FlightStatus, FlightType } from './types';
+import type { FlightData, FlightStatus, FlightType } from './types';
 
 interface FlightStripProps {
   flight: FlightData;
@@ -119,6 +118,6 @@ export const FlightStrip = ({
   );
 };
 
-// Change the re-export to use 'export type' for TypeScript isolatedModules
-export { FlightStatus, FlightType } from './types';
-export type { FlightData } from './types';
+// Export types for use in other components
+// Use 'export type' syntax for TypeScript isolatedModules mode
+export type { FlightData, FlightStatus, FlightType } from './types';
