@@ -9,7 +9,7 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
-import { FlightStatus } from './types';
+import type { FlightStatus } from './types';
 
 interface StatusActionsProps {
   status: FlightStatus;
