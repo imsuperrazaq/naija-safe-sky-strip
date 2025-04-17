@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Clock, ArrowDown, ArrowUp, Plane, MoreVertical } from 'lucide-react';
+import { Clock, ArrowDown, ArrowUp, Plane, MoreVertical, GripHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { 
@@ -32,18 +32,22 @@ export interface FlightData {
   type: FlightType;
   squawk?: string;
   remarks?: string;
+  handlingController?: string;
+  lastUpdated?: string;
 }
 
 interface FlightStripProps {
   flight: FlightData;
   onStatusChange?: (id: string, status: FlightStatus) => void;
   onSectorChange?: (id: string, direction: 'up' | 'down') => void;
+  isDragging?: boolean;
 }
 
 export const FlightStrip = ({
   flight,
   onStatusChange,
-  onSectorChange
+  onSectorChange,
+  isDragging = false
 }: FlightStripProps) => {
   const [isSelected, setIsSelected] = useState(false);
   
@@ -73,6 +77,7 @@ export const FlightStrip = ({
         "rounded-sm p-2 mb-2 cursor-pointer select-none transition-all hover:bg-slate-800/50",
         "flex flex-col gap-1 text-sm font-mono",
         isSelected && "ring-2 ring-blue-500",
+        isDragging && "ring-2 ring-amber-500/50 shadow-lg",
         statusClasses[flight.status],
         typeClasses[flight.type]
       )}
@@ -80,7 +85,10 @@ export const FlightStrip = ({
     >
       {/* Header row */}
       <div className="flex justify-between items-center">
-        <div className="font-bold text-base tracking-wide">{flight.callsign}</div>
+        <div className="font-bold text-base tracking-wide flex items-center gap-2">
+          <GripHorizontal className="h-4 w-4 text-slate-500 hover:text-slate-300" />
+          {flight.callsign}
+        </div>
         <div className="flex items-center gap-1">
           <Clock className="h-3 w-3 text-[hsl(var(--atc-pending))]" />
           <span className="text-xs">{flight.estimatedTime}</span>
@@ -154,6 +162,17 @@ export const FlightStrip = ({
         </div>
       </div>
 
+      {/* Controller info - NEW */}
+      {flight.handlingController && (
+        <div className="flex justify-between text-xs mt-1">
+          <div className="text-slate-400">Controller:</div>
+          <div className="font-medium text-green-400">{flight.handlingController}</div>
+          {flight.lastUpdated && (
+            <div className="text-slate-500">{flight.lastUpdated}</div>
+          )}
+        </div>
+      )}
+
       {/* Status Actions */}
       <div className="flex justify-between items-center mt-1">
         <div className="flex gap-1">
@@ -219,6 +238,7 @@ export const FlightStrip = ({
             >
               Mark as Alert
             </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">Assign Controller</DropdownMenuItem>
             {flight.remarks && (
               <DropdownMenuItem className="cursor-pointer">View Remarks</DropdownMenuItem>
             )}
