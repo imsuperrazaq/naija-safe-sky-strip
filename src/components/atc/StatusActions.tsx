@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { MoreVertical } from 'lucide-react';
@@ -28,13 +29,13 @@ export const StatusActions = ({
   };
 
   return (
-    <div className="flex justify-between items-center mt-1">
+    <div className="flex justify-between items-center mt-2">
       <div className="flex gap-1">
         <Button
           size="sm"
           variant={status === 'pending' ? "default" : "outline"}
           className={cn("h-6 px-2 text-xs",
-            status === 'pending' ? "bg-amber-600 hover:bg-amber-700" : "hover:bg-amber-900/30"
+            status === 'pending' ? "bg-amber-600 hover:bg-amber-700 border-none" : "hover:bg-amber-900/30 border-amber-800/50 text-amber-300"
           )}
           onClick={(e) => {
             e.stopPropagation();
@@ -47,7 +48,7 @@ export const StatusActions = ({
           size="sm"
           variant={status === 'active' ? "default" : "outline"}
           className={cn("h-6 px-2 text-xs",
-            status === 'active' ? "bg-green-600 hover:bg-green-700" : "hover:bg-green-900/30"
+            status === 'active' ? "bg-green-600 hover:bg-green-700 border-none" : "hover:bg-green-900/30 border-green-800/50 text-green-300"
           )}
           onClick={(e) => {
             e.stopPropagation();
@@ -60,7 +61,7 @@ export const StatusActions = ({
           size="sm"
           variant={status === 'cleared' ? "default" : "outline"}
           className={cn("h-6 px-2 text-xs",
-            status === 'cleared' ? "bg-blue-600 hover:bg-blue-700" : "hover:bg-blue-900/30"
+            status === 'cleared' ? "bg-blue-600 hover:bg-blue-700 border-none" : "hover:bg-blue-900/30 border-blue-800/50 text-blue-300"
           )}
           onClick={(e) => {
             e.stopPropagation();

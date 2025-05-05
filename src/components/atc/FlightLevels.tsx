@@ -15,7 +15,7 @@ export const FlightLevels = ({
   speed
 }: FlightLevelsProps) => {
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-between mb-1.5">
       <div className="flex gap-2 text-xs">
         <div>
           <span className="text-slate-400">CFL:</span>
@@ -23,7 +23,7 @@ export const FlightLevels = ({
         </div>
         <div>
           <span className="text-slate-400">AFL:</span>
-          <span className="ml-1">{current}</span>
+          <span className="ml-1 text-slate-300">{current}</span>
         </div>
         {requested && (
           <div>
@@ -33,7 +33,7 @@ export const FlightLevels = ({
         )}
       </div>
       <div>
-        <span className="text-xs">{speed}</span>
+        <span className="text-xs text-slate-300">{speed}</span>
       </div>
     </div>
   );

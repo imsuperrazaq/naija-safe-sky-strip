@@ -2,6 +2,7 @@
 import React from 'react';
 import { Clock, ArrowDown, ArrowUp, GripHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface FlightStripHeaderProps {
   callsign: string;
@@ -17,14 +18,17 @@ export const FlightStripHeader = ({
   onSectorChange
 }: FlightStripHeaderProps) => {
   return (
-    <div className="flex justify-between items-center">
+    <div className={cn(
+      "flex justify-between items-center",
+      "px-3 py-1.5 bg-slate-800 rounded-t-sm"
+    )}>
       <div className="font-bold text-base tracking-wide flex items-center gap-2">
         <GripHorizontal className="h-4 w-4 text-slate-500 hover:text-slate-300" />
-        {callsign}
+        <span className="text-white">{callsign}</span>
       </div>
       <div className="flex items-center gap-1">
-        <Clock className="h-3 w-3 text-[hsl(var(--atc-pending))]" />
-        <span className="text-xs">{estimatedTime}</span>
+        <Clock className="h-3 w-3 text-amber-400" />
+        <span className="text-xs text-amber-200">{estimatedTime}</span>
         <div className="flex gap-1 ml-2">
           <Button 
             onClick={(e) => {
